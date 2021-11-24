@@ -1,3 +1,37 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.contentContainer {
+  @apply w-screen h-screen md:w-5/6 xl:w-3/4 flex flex-col items-center;
+}
+
+.frontPageBtn {
+  @apply flex border-4 border-black rounded-lg h-32 w-32 m-2 justify-center items-center group-hover:border-primary active:text-primary active:border-primary;
+}
+
+.cameraBtn {
+  @apply flex h-24 w-24 border-black border-4 justify-center items-center rounded-full mt-10 active:text-primary active:border-primary hover:bg-black hover:bg-opacity-5;
+}
+
+.galleryContainer {
+  @apply w-screen md:w-96 flex flex-col items-center;
+}
+
+.imgCard {
+  @apply flex h-32 w-5/6 bg-bgImg my-2 justify-between items-center rounded-xl pl-4 relative hover:shadow-lg;
+}
+
+.imgCardInfo {
+  @apply absolute h-24 left-32 w-32 mt-1 flex flex-col justify-between;
+}
+
+.backArrow {
+  @apply absolute top-0 left-2 text-4xl active:text-primary z-20;
+}
+
+.imgDetailsBtn {
+  @apply text-6xl mx-10 rounded-full w-24 h-24 flex justify-center items-center;
+}
