@@ -15,7 +15,6 @@ function Gallery() {
   }, [images]);
 
   function goBack() {
-    console.log("go back");
     navigate("/", { replace: true });
   }
 

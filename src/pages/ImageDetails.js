@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { BsArrowLeft, BsFillTrashFill, BsDownload } from "react-icons/bs";
-import { saveAs } from "file-saver";
 import { useParams, useNavigate } from "react-router-dom";
 import { ImageContext } from "../ContextFile";
 
@@ -10,17 +9,8 @@ function ImageDetails() {
   const { imageDetails } = useContext(ImageContext);
 
   function goBack() {
-    console.log("go back");
     navigate("/gallery", { replace: true });
   }
-
-  const downloadImg = async () => {
-    const downloadResult = await fetch(imageDetails.src);
-    const blob = await downloadResult.blob();
-    saveAs(blob, "downloaded.png");
-  };
-
-  console.log("bajs", imageDetails);
 
   function removeImage() {
     const imgsInLS = JSON.parse(localStorage.getItem("imgs"));
@@ -41,12 +31,11 @@ function ImageDetails() {
         <img src={imageDetails.src} alt="selfie" className="w-full h-full" />
       </div>
       <section className="flex">
-        <button
-          className="imgDetailsBtn hover:bg-black hover:bg-opacity-5"
-          onClick={downloadImg}
-        >
-          <BsDownload />
-        </button>
+        <a href={imageDetails.src} download="image">
+          <button className="imgDetailsBtn hover:bg-black hover:bg-opacity-5">
+            <BsDownload />
+          </button>
+        </a>
 
         <button
           className="imgDetailsBtn text-red-500 hover:text-red-800  hover:bg-black hover:bg-opacity-5"

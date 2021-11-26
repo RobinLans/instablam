@@ -1,7 +1,6 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { BsCameraFill, BsArrowLeft } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import Webcam from "react-webcam";
 
 const videoConstraints = {
   aspectRatio: 1,
@@ -9,19 +8,48 @@ const videoConstraints = {
 };
 
 function Camera() {
-  const webcamRef = useRef(null);
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
   const [imageSource, setImageSource] = useState(null);
   const [currentAddress, setCurrentAddress] = useState({});
   let navigate = useNavigate();
   const currentDate = new Date();
 
-  const capture = useCallback(() => {
-    setImageSource(webcamRef.current.getScreenshot());
-  }, [webcamRef, setImageSource]);
+  function getVideoStream() {
+    navigator.mediaDevices
+      .getUserMedia({
+        video: { width: 400, height: 400 },
+      })
+      .then((stream) => {
+        let video = videoRef.current;
+        video.srcObject = stream;
+        video.play();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
-  function goBack() {
-    console.log("go back");
-    navigate("/", { replace: true });
+  useEffect(() => {
+    getVideoStream();
+  }, []);
+
+  function capturePhoto() {
+    try {
+      canvasRef.current
+        .getContext("2d")
+        .drawImage(
+          videoRef.current,
+          0,
+          0,
+          canvasRef.current.width,
+          canvasRef.current.height
+        );
+
+      setImageSource(canvasRef.current.toDataURL("image/jpeg"));
+    } catch (error) {
+      console.log("Cant take picture", error);
+    }
   }
 
   useEffect(() => {
@@ -38,6 +66,8 @@ function Camera() {
       localStorage.setItem("imgs", JSON.stringify(newImgArr));
     }
   }, [imageSource]);
+
+  // GEOLOCATION STUFF
 
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -85,26 +115,33 @@ function Camera() {
     }
   }
 
+  function goBack() {
+    console.log("go back");
+    navigate("/", { replace: true });
+  }
+
   return (
     <>
       <button onClick={goBack} className="backArrow">
         <BsArrowLeft />
       </button>
       <h1 className="text-3xl mb-6">Take a nice photo</h1>
-      <div className="w-72 h-72 rounded-3xl overflow-hidden">
-        <Webcam
-          audio={false}
-          ref={webcamRef}
-          height={400}
-          width={300}
+      <div className="w-72 h-72 rounded-3xl overflow-hidden bg-red-400">
+        <video
+          ref={videoRef}
           videoConstraints={videoConstraints}
-          screenshotFormat="image/jpeg"
-        />
+          playsInline
+        ></video>
       </div>
-
-      <button className="cameraBtn" onClick={capture}>
+      <button className="cameraBtn" onClick={capturePhoto}>
         <BsCameraFill className="text-5xl " />
       </button>
+      <canvas
+        className="hidden"
+        ref={canvasRef}
+        width="400"
+        height="400"
+      ></canvas>
     </>
   );
 }

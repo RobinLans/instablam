@@ -9,7 +9,6 @@ function ImageCard({ img, index, removeImage }) {
   const navigate = useNavigate();
 
   function goToDetailsPage() {
-    console.log(img.id);
     setImageDetails({
       src: img.src,
       place: {
@@ -39,9 +38,6 @@ function ImageCard({ img, index, removeImage }) {
           ) : (
             <p>{img.place.error}</p>
           )}
-          {/* <a href={img.src} download="image.jpeg">
-            <button>Download</button>
-          </a> */}
         </div>
         <p className="text-sm m-0 opacity-70">{img.date}</p>
       </article>
